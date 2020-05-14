@@ -1,58 +1,134 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class>
+    <vaadin-app-layout>
+      <vaadin-drawer-toggle slot="navbar"></vaadin-drawer-toggle>
+      <img
+        slot="navbar"
+        src="https://tripod.hr/img/tripodLogo.svg"
+        alt="Tripod Logo"
+        width="100"
+        height="31"
+        referrerpolicy="no-referrer"
+      />
+      <vaadin-tabs
+        slot="drawer"
+        orientation="vertical"
+        theme="minimal"
+        style="margin: 0 auto; flex: 1;"
+      >
+        <vaadin-tab>
+          <iron-icon icon="vaadin:home"></iron-icon>Page 1
+        </vaadin-tab>
+        <vaadin-tab>
+          <iron-icon icon="vaadin:list"></iron-icon>Page 2
+        </vaadin-tab>
+        <vaadin-tab>
+          <iron-icon icon="vaadin:options"></iron-icon>Page 3
+        </vaadin-tab>
+        <vaadin-tab>
+          <iron-icon icon="vaadin:question"></iron-icon>Page 4
+        </vaadin-tab>
+      </vaadin-tabs>
+
+      <div class="content">
+        <h3>Page title</h3>
+        <div class="form" @keyup.enter="addPerson">
+          <vaadin-text-field
+            theme="custom-background"
+            label="First Name"
+            :value="currentPerson.firstName"
+            @input="currentPerson.firstName = $event.target.value"
+          ></vaadin-text-field>
+          <vaadin-text-field
+            theme="custom-background"
+            label="Last Name"
+            :value="currentPerson.lastName"
+            @input="currentPerson.lastName = $event.target.value"
+          ></vaadin-text-field>
+          <vaadin-button @click="addPerson">Add</vaadin-button>
+        </div>
+        <vaadin-grid :items.prop="people" theme="row-dividers" column-reordering-allowed multi-sort>
+          <vaadin-grid-column class="prisutnost" header="Prisustvo"></vaadin-grid-column>
+          <vaadin-grid-column path="firstName" header="First name"></vaadin-grid-column>
+          <vaadin-grid-column path="lastName" header="Last name"></vaadin-grid-column>
+        </vaadin-grid>
+      </div>
+    </vaadin-app-layout>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+import "@vaadin/vaadin-button";
+import "@vaadin/vaadin-grid";
+import "@vaadin/vaadin-text-field";
+import "@vaadin/vaadin-checkbox";
+import "@vaadin/vaadin-icons";
+import "@vaadin/vaadin-app-layout";
+import "@vaadin/vaadin-app-layout/vaadin-drawer-toggle";
+import "@vaadin/vaadin-tabs";
+class Person {
+  constructor() {
+    this.firstName = "";
+    this.lastName = "";
+    this.prisutnost = true;
   }
 }
+
+export default {
+  name: "HelloWorld",
+  data: function() {
+    return {
+      people: [],
+      currentPerson: new Person()
+    };
+  },
+  methods: {
+    addPerson: function() {
+      this.people = [...this.people, this.currentPerson];
+      this.currentPerson = new Person();
+      document.querySelector(".prisutnost").renderer = (
+        root,
+        grid,
+        rowData
+      ) => {
+        root.innerHTML = `<vaadin-checkbox checked="${rowData.item.prisutnost}" value="${rowData.item.prisutnost}"></vaadin-checkbox>`;
+      };
+    }
+  }
+};
+
+const styleElement = document.createElement("dom-module");
+styleElement.setAttribute("theme-for", "vaadin-text-field");
+
+styleElement.innerHTML = `<template>
+   <style>
+      :host([theme="custom-background"]) [part="input-field"] {
+        background-color: #E0E0E0;
+   
+      font-family: var(--lumo-font-family);
+     	 font-size: var(--lumo-font-size-xs);
+     	 font-weight: 500;
+      }
+   </style>
+ </template>`;
+
+styleElement.register("custom-background");
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add "scoped" attribute to limit CSS to this component only         background-color: var(--lumo-contrast-50pct);-->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+
+.form {
+  margin-bottom: 16px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.form * {
+  margin-right: 4px;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+.vaadin-text-field-container [part="input-field"] {
+  flex-grow: 0;
+  --lumo-primary-color-10pct: hsla(214, 90%, 52%, 0.5);
+  background-color: var(--lumo-contrast-20pct);
 }
-a {
-  color: #42b983;
-}
+
 </style>

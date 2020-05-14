@@ -8,6 +8,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vaadin/vaadin-app-layout": "^2.1.0",
+    "@vaadin/vaadin-button": "^2.3.0",
+    "@vaadin/vaadin-checkbox": "^2.3.0",
+    "@vaadin/vaadin-grid": "^5.5.3",
+    "@vaadin/vaadin-icons": "^4.3.1",
+    "@vaadin/vaadin-material-styles": "github:vaadin/vaadin-material-theme",
+    "@vaadin/vaadin-tabs": "^3.1.0",
+    "@vaadin/vaadin-text-field": "^2.5.5",
     "core-js": "^3.6.4",
     "vue": "^2.6.11"
   },
@@ -15,7 +23,9 @@
     "@vue/cli-plugin-babel": "~4.3.0",
     "@vue/cli-plugin-eslint": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
+    "@webcomponents/webcomponentsjs": "^2.4.3",
     "babel-eslint": "^10.1.0",
+    "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "^2.6.11"
