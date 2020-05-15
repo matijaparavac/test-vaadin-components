@@ -1,4 +1,4 @@
-# webcomponents
+# vaadin webcomponents with vue
 
 ## Project setup
 ```
